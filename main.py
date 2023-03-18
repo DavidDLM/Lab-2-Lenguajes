@@ -2,7 +2,7 @@ import postfix
 from direct_dfa import DFA
 from syntaxTree import SyntaxTree
 from thompson import Thompson
-from postfix import shunting_yard
+from postfix import ShuntingYard
 
 # Direct DFA
 # ---------------------------------------------------------
@@ -22,7 +22,7 @@ dfa.graphAutomata(mapping=dfa.dfamap)
 
 # NFA to DFA
 # ---------------------------------------------------------
-ptf = shunting_yard(len(regex))
+ptf = ShuntingYard(len(regex))
 # Convert postfix to NFA
 ptf.shunting_yard(regex)
 postfixExp = ptf.res
