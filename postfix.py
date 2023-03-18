@@ -3,7 +3,7 @@ EPSILON = 'ε'
 precedence = {'|': 1, '.': 1, '?': 2, '*': 2, '+': 2}
 
 
-class shunting_yard:
+class ShuntingYard:
     def __init__(this, length):
         this.top = -1
         this.length = length
