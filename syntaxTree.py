@@ -3,6 +3,7 @@
 
 from machine import *
 import copy
+EPSILON = 'ε'
 
 
 class SyntaxTree(object):
@@ -65,15 +66,12 @@ class SyntaxTree(object):
     # REGEX to postfix
     def infixToPostfix(this):
         operstack = Stack()
-        #print("1. infix a postfix")
         for char in this.er:
             if char in this.symbol:
                 this.postfix += char
-                #print("char es symbol")
             elif char == '(':
                 operstack.push(char)
-                #print("char es parentesis (")
-            elif char == ')':  # caso parentesis final o caso simplemente parentesis
+            elif char == ')':  # Case parenthesis
                 while operstack.peek() != '(':
                     this.postfix += operstack.pop()
                     if operstack.empty():
@@ -92,12 +90,12 @@ class SyntaxTree(object):
                 operstack.push(char)
         while not operstack.empty():
             this.postfix += operstack.pop()
-        # Refinar el postfix incluyendo epsilon en "?"
+        # Refine postfix including epsilon in "?"
         refPostfix = ""
         for char in this.postfix:
             if char == '?':
                 refPostfix += 'ε|'
-                this.symbol.append('ε')
+                this.symbol.append(EPSILON)
             else:
                 refPostfix += char
 
@@ -121,7 +119,7 @@ class SyntaxTree(object):
                             var2 = copy.deepcopy(var)
                             # Kleene
                             k = Node('*', parent=None, prev=None, next=var2)
-                            # Concatenacion
+                            # Concatenation
                             c = Node('.', parent=None, prev=var, next=k)
                             var2.parent = k
                             k.parent = c
