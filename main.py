@@ -2,7 +2,8 @@ import postfix
 from direct_dfa import DFA
 from syntaxTree import SyntaxTree
 from thompson import Thompson
-from postfix import ShuntingYard
+from postfix import *
+from nfa_dfa import NFAtoDFA
 
 # Direct DFA
 # ---------------------------------------------------------
@@ -18,20 +19,22 @@ dfa = DFA(syntaxTree=tree, direct=True, circs=pts)
 dfa.buildGraph()
 # Show DFA
 dfa.graphAutomata(mapping=dfa.dfamap)
-# -------------------PostifixToNFA--------------------------------------
+# ---------------------------------------------------------
 
 # NFA to DFA
 # ---------------------------------------------------------
-ptf = ShuntingYard(len(regex))
+ptf = postfix.shunting_yard(regex)
 # Convert postfix to NFA
-ptf.shunting_yard(regex)
-postfixExp = ptf.res
-print("Postfix value: " + postfixExp)
+print("Postfix value: " + ptf)
 # Create new NFA
-new_nfa = Thompson(postfixExp)
+new_nfa = Thompson(ptf)
 new_nfa.compile()
+# Create new DFA
+new_dfa = NFAtoDFA(new_nfa.startingState, new_nfa.finalState,
+                   new_nfa.states, new_nfa.symbolList, new_nfa.splitTransitionsList)
+new_dfa.compile()
 # NFA simulation
-char_string = input("\nString to be evaluated in NFA:\n-> ")
+char_string = input("\nString to be evaluated in NFA:\n")
 accept_string = new_nfa.char_string(char_string)
 if accept_string:
     print(f"\nString '{char_string}' was accepted.")
