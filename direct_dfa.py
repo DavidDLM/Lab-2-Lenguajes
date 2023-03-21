@@ -10,10 +10,12 @@ output = os.environ["PATH"]
 output += os.pathsep + 'C:\Program Files\Graphviz\bin'
 # Set alphabet for states
 shortuuid.set_alphabet("ABC")
-
+EPSILON = 'ε'
 
 # Create an automata with its elements
 # https://stackoverflow.com/questions/35272592/how-are-finite-automata-implemented-in-code
+
+
 class DFANode:
     def __init__(this, val):
         this.val = val
@@ -178,7 +180,7 @@ class DFA(Automata):
                         smap[tuple(x)]
                     except:
                         smap[tuple(x)] = shortuuid.encode(
-                            uuid.uuid4())[:4]
+                            uuid.uuid4())[:2]
 
                     try:
                         smap[tuple(x1)]
