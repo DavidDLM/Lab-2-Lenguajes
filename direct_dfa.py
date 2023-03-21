@@ -87,7 +87,7 @@ class Automata(object):
 
 # Create a DFA instance with automata
 # Contains starting node, final node, symbols, syntax tree, etc.
-class DFA(Automata):
+class DirectDFA(Automata):
     def __init__(this, syntaxTree=None, symbols=None, nodes=[], tfunc={}, initial_node=None, terminal_node=[], direct=False, circs=None):
         this.syntaxTree = syntaxTree
         this.circs = circs
