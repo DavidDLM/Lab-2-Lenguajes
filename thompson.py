@@ -36,7 +36,6 @@ class Thompson():
         this.error = False
 
     def compile(this):
-        print("\nRegex: ", this.regex)
         this.case_concurrence()
         symbolList = []
         regex = this.regex
@@ -350,7 +349,6 @@ class Thompson():
         this.states_list = ", ".join(this.states_list)
 
         if this.error == False:
-
             with open('nfa.txt', 'a', encoding="utf-8") as f:
                 f.write("NFA")
                 f.write("\n")
@@ -370,53 +368,58 @@ class Thompson():
             print("\nInvalid regex.")
 
     def case_epsilon(this, states):
-        resultado = states.copy()
-        pila = states.copy()
-        while pila:
-            actual = pila.pop()
+        result = states.copy()
+        vertexStack = states.copy()
+        while vertexStack:
+            current = vertexStack.pop()
             epsilon_transitionsList = [
-                t[2] for t in this.splitTransitionsList if t[0] == actual and t[1] == EPSILON]
+                t[2] for t in this.splitTransitionsList if t[0] == current and t[1] == EPSILON]
             for e in epsilon_transitionsList:
-                if e not in resultado:
-                    resultado.append(e)
-                    pila.append(e)
-        return resultado
+                if e not in result:
+                    result.append(e)
+                    vertexStack.append(e)
+        return result
 
-    def char_string(this, cadena):
+    def char_string(this, charString):
         current_states = this.case_epsilon([this.startingState])
         final_states = []
-        for simbolo in cadena:
-            nuevos_states = []
-            for estado in current_states:
-                for transicion in this.splitTransitionsList:
-                    if estado == transicion[0] and simbolo == transicion[1]:
-                        nuevos_states.append(transicion[2])
-            if not nuevos_states:
+        for symbol in charString:
+            newStates = []
+            for state in current_states:
+                for transition in this.splitTransitionsList:
+                    if state == transition[0] and symbol == transition[1]:
+                        newStates.append(transition[2])
+            if not newStates:
                 return False
-            current_states = this.case_epsilon(nuevos_states)
+            current_states = this.case_epsilon(newStates)
         final_states = this.case_epsilon(current_states)
         return this.finalState in final_states
 
-    def paintGraph(this, nombre):
+    def paintGraph(this, name):
+        # This will create a graph with nodes and edges,
+        #  with labels indicating the direction of the edges.
         dot = Digraph()
         for i in range(len(this.states)):
             if this.states[i] == this.finalState:
                 dot.node(str(this.states[i]), shape="doublecircle")
             else:
                 dot.node(str(this.states[i]), shape="circle")
-        for transicion in this.splitTransitionsList:
-            if transicion[1] == EPSILON:
-                dot.edge(str(transicion[0]), str(transicion[2]), label=EPSILON)
+        for transition in this.splitTransitionsList:
+            if transition[1] == EPSILON:
+                dot.edge(str(transition[0]), str(transition[2]), label=EPSILON)
             else:
-                dot.edge(str(transicion[0]), str(
-                    transicion[2]), label=transicion[1])
-        dot.render(nombre, format='png', view=True)
+                dot.edge(str(transition[0]), str(
+                    transition[2]), label=transition[1])
+        dot.render(name, format='png', view=True)
 
-    def item(this, caracter):
-        if(caracter.isalpha() or caracter.isnumeric() or caracter == EPSILON):
+    def item(this, character):
+        # Recognize character
+        if(character.isalpha() or character.isnumeric() or character == EPSILON):
             return True
         else:
             return False
 
     def case_concurrence(this):
+        # Case concurrence
+        # Replace concurrence with epsilon
         this.regex = this.regex.replace('?', 'ε?')
